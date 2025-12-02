@@ -1,39 +1,32 @@
 import { useState, useEffect } from "react";
-// Импортируй свои компоненты
+
 import Header from "./components/Header";
-import CryptoTable from "./components/CryptoTable"; // (когда создашь)
+import CryptoTable from "./components/CryptoTable"; 
 import { fetchCoins } from "./services/api";
 
 function App() {
-  // ----------------------------------------------------
-  // 1. ЛОГИКА ТЕМЫ + LOCALSTORAGE
-  // ----------------------------------------------------
-  
-  // Инициализация: Проверяем localStorage ДО того, как React отрисует экран.
-  // Если там записано 'dark', сразу ставим true.
+
+
+  const [isLoading, setIsLoading] = useState(true);
   const [isDark, setIsDark] = useState(() => {
     const savedTheme = localStorage.getItem('theme');
     return savedTheme === 'dark';
   });
 
-  // Эффект: Срабатывает при каждом клике на кнопку смены темы
   useEffect(() => {
     if (isDark) {
-      document.documentElement.classList.add('dark'); // Вешаем класс на <html>
-      localStorage.setItem('theme', 'dark');          // Сохраняем в память
+      document.documentElement.classList.add('dark'); 
+      localStorage.setItem('theme', 'dark');          
     } else {
-      document.documentElement.classList.remove('dark'); // Снимаем класс
-      localStorage.setItem('theme', 'light');            // Сохраняем в память
+      document.documentElement.classList.remove('dark'); 
+      localStorage.setItem('theme', 'light');            
     }
-  }, [isDark]); // Зависимость: запускать код, когда меняется isDark
+  }, [isDark]); 
 
   const toggleTheme = () => {
     setIsDark(!isDark);
   };
 
-  // ----------------------------------------------------
-  // 2. ЛОГИКА ДАННЫХ
-  // ----------------------------------------------------
   const [coins, setCoins] = useState([]);
 
   const [search, setSearch] = useState('')
@@ -64,28 +57,98 @@ function App() {
 
   useEffect(() => {
     const getData = async () => {
-      const data = await fetchCoins();
-      setCoins(data);
+      setIsLoading(true); 
+      try {
+        const data = await fetchCoins();
+        setCoins(data);
+      } catch (error) {
+        console.error("Failed to fetch coins:", error);
+      } finally {
+        setIsLoading(false); 
+      }
     };
     getData();
   }, []);
 
+  const [sortConfig, setSortConfig] = useState({ 
+    key: 'market_cap', 
+    direction: 'desc' 
+  });
 
-  // ----------------------------------------------------
-  // 3. РЕНДЕР
-  // ----------------------------------------------------
-  return (
-    // Важно: классы фона должны быть здесь, на главном контейнере
-    <div className="min-h-screen transition-colors duration-300 bg-white text-gray-900 dark:bg-slate-900 dark:text-white">
+  const handleSort = (clickedKey) => {
+    const { key: currentKey, direction: currentDirection } = sortConfig;
+  
+    if (currentKey === clickedKey) {
+      setSortConfig({
+        key: clickedKey,
+        direction: currentDirection === 'asc' ? 'desc' : 'asc',
+      });
+    } 
+    else {
+      setSortConfig({
+        key: clickedKey,
+        direction: 'desc',
+      });
+    }
+  };
+
+  const enrichedCoins = filteredCoins.map(coin => {
+    return {
+      ...coin,
+      isFavorite: favorites.includes(coin.id)
+    };
+  });
+
+  const sortedCoins = [...enrichedCoins].sort((a, b) => {
+    const { key, direction } = sortConfig;
+    if (key === 'isFavorite') {
+      return direction === 'asc'
+        ? Number(a.isFavorite) - Number(b.isFavorite)
+        : Number(b.isFavorite) - Number(a.isFavorite);
+    } 
+    
+    else {
+      const aValue = a[key];
+      const bValue = b[key];
       
-      {/* Передаем пропсы в Хедер */}
-      <Header isDark={isDark} toggleTheme={toggleTheme} search={search} setSearch={setSearch}/>
+      return direction === 'asc'
+        ? aValue - bValue
+        : bValue - aValue;
+    }
+  });
 
-      <main className="container mx-auto px-4 mt-8">
-        <CryptoTable coins={filteredCoins} favorites={favorites} toggleFav={toggleFav}/>
-      </main>
 
-    </div>
+  return (
+
+    <div className="min-h-screen transition-colors duration-300 bg-white text-gray-900 dark:bg-slate-900 dark:text-white">
+    <Header isDark={isDark} toggleTheme={toggleTheme} search={search} setSearch={setSearch} />
+
+    <main className="container mx-auto p-4">
+      {/* --- ВОТ УСЛОВИЕ --- */}
+      {isLoading ? (
+        // Если идет загрузка, показываем это:
+        <div className="text-center py-20">
+          <p className="text-2xl text-gray-500 animate-pulse">
+            Loading data... 🚀
+          </p>
+        </div>
+      ) : (
+        // Если загрузка окончена, показываем это:
+        <>
+          <div className="mb-4">
+            {/* Тут твои кнопки фильтра или другие элементы управления */}
+          </div>
+          <CryptoTable 
+            coins={sortedCoins} 
+            favorites={favorites}
+            toggleFav={toggleFav}
+            sortConfig={sortConfig}
+            handleSort={handleSort}
+          />
+        </>
+      )}
+    </main>
+  </div>
   );
 }
 
