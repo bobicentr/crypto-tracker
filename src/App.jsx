@@ -124,27 +124,27 @@ function App() {
     <Header isDark={isDark} toggleTheme={toggleTheme} search={search} setSearch={setSearch} />
 
     <main className="container mx-auto p-4">
-      {/* --- ВОТ УСЛОВИЕ --- */}
       {isLoading ? (
-        // Если идет загрузка, показываем это:
         <div className="text-center py-20">
           <p className="text-2xl text-gray-500 animate-pulse">
             Loading data... 🚀
           </p>
         </div>
       ) : (
-        // Если загрузка окончена, показываем это:
+
         <>
-          <div className="mb-4">
-            {/* Тут твои кнопки фильтра или другие элементы управления */}
+        {sortedCoins.length > 0 ? (
+
+          <CryptoTable coins={sortedCoins} 
+          favorites={favorites}
+          toggleFav={toggleFav}
+          sortConfig={sortConfig}
+          handleSort={handleSort}/>
+        ) : (
+          <div className="text-center py-20">
+            <p className="text-xl text-gray-500">No coins found for your query.</p>
           </div>
-          <CryptoTable 
-            coins={sortedCoins} 
-            favorites={favorites}
-            toggleFav={toggleFav}
-            sortConfig={sortConfig}
-            handleSort={handleSort}
-          />
+        )}
         </>
       )}
     </main>
