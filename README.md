@@ -1,55 +1,38 @@
-# 📈 Crypto Tracker - React & Tailwind CSS
+# 📈 Crypto Tracker — Отслеживание курсов криптовалют
+Live Demo — [Ознакомиться](https://bobicentr.github.io/crypto-tracker/)
 
-A responsive web application for tracking real-time cryptocurrency prices, built with modern frontend technologies. Users can search for specific coins, sort the data by price or market cap, and manage a personal watchlist of their favorite assets.
+# О проекте
+Этот учебный проект я разработал для удобного мониторинга цен на криптовалюты в реальном времени. Приложение позволяет быстро находить нужные монеты, следить за их рыночной капитализацией и формировать личный список избранного. 
+Проект был создан для отработки навыков работы с внешними API, управления сложными состояниями (фильтрация/сортировка) и создания адаптивного интерфейса на Tailwind CSS.
 
-## ✨ Features
+# Технологический стек 
+- **React (Vite)** — основной фреймворк
+- **Tailwind CSS** — для стилизации
+- **CoinGecko API** — источник данных о криптовалютах
+- **Lucide React** — для иконок
+- **LocalStorage** — для сохранения темы оформления и списка избранного
 
-- **Real-Time Data**: Fetches the top 50 cryptocurrencies from the **CoinGecko API**.
-- **Dark Mode**: A sleek, user-friendly dark theme that persists across sessions using `localStorage`.
-- **Live Search**: Instantly filter coins by name or symbol as you type.
-- **Advanced Sorting**: Clickable table headers to sort data by market cap, price, or favorite status.
-- **Personal Watchlist**: Mark any coin as a favorite. Your selections are saved in `localStorage`.
-- **Loading & Empty States**: Smooth user experience with loading indicators and "not found" messages.
-- **Responsive Design**: A mobile-first layout that looks great on all screen sizes, built entirely with **Tailwind CSS**.
+# Как установить локально
+Если вы хотите запустить проект у себя, выполните следующие шаги:
+1. **Склонируйте репозиторий**
+   ```bash
+   git clone https://github.com/bobicentr/crypto-tracker.git
+   cd crypto-tracker
+   ```
+2. **Установите зависимости**
+   ```bash
+   npm install
+   ```
+3. **Запустить проект**
+   ```bash
+   npm run dev
+   ```
+   Открыть проект по адресу [http://localhost:5173](http://localhost:5173)
 
-## 🛠️ Tech Stack
-
-- **Framework**: React (Vite)
-- **Styling**: Tailwind CSS
-- **Data Fetching**: Axios
-- **API**: [CoinGecko API](https://www.coingecko.com/en/api)
-- **Icons**: Lucide React
-- **Deployment**: GitHub Pages
-
-## 🚀 Getting Started
-
-To run this project locally, follow these steps:
-
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/your-username/crypto-tracker.git
-    cd crypto-tracker
-    ```
-
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
-
-3.  **Run the development server:**
-    ```bash
-    npm run dev
-    ```
-    Open [http://localhost:5173](http://localhost:5173) (or another port if specified) to view it in your browser.
-
-## 🏗️ Key Learnings & Implementation Details
-
-- **State Management**: All application state (coins, theme, search query, sorting config) is managed with React Hooks (`useState`, `useEffect`).
-- **Derived State**: Filtering and sorting are performed "on the fly" during each render cycle, ensuring the UI is always in sync with the state without unnecessary side effects.
-- **Immutability**: State updates for arrays (like the favorites list) are handled immutably using `filter` and spread syntax (`...`) to prevent bugs.
-- **Component-Based Architecture**: The application is broken down into logical components (`Header`, `CryptoTable`) with clear data flow via props.
-- **LocalStorage**: Used to persist the user's theme preference and favorite coins, providing a seamless experience between visits.
-
----
-
-_This project was created as a learning exercise to master React Hooks, Tailwind CSS, and interaction with external APIs._
+# Ключевые функции
+- **Данные в реальном времени**: Подгрузка актуальной информации о топ-50 криптовалютах через CoinGecko API.
+- **Темная и светлая темы**: Реализовано переключение темы интерфейса, выбор которого сохраняется в `localStorage`.
+- **Живой поиск**: Мгновенная фильтрация монет по названию или тикеру (символу) прямо во время ввода.
+- **Продвинутая сортировка**: Интерактивные заголовки таблицы позволяют сортировать данные по цене, капитализации и статусу «избранного».
+- **Список избранного**: Возможность добавлять монеты в личный список, который не пропадает после перезагрузки страницы.
+- **Адаптивность**: Интерфейс полностью оптимизирован под любые размеры экранов.
