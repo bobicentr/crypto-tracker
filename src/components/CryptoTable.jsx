@@ -84,7 +84,7 @@ function CryptoTable({ coins, favorites, toggleFav, handleSort, sortConfig}) {
                       ? 'text-green-500' 
                       : 'text-red-500'
                   }`}>
-                  {coin.price_change_percentage_24h.toFixed(2)}%
+                  {coin.price_change_percentage_24h?.toFixed(2)}%
                 </td>
   
                 <td className="p-4 hidden md:table-cell">
